@@ -1,4 +1,4 @@
-name: Sync branch
+name: Update Branch
 
 on:
   push:
@@ -6,14 +6,15 @@ on:
       - main
 
 jobs:
-  sync-branch:
-    name: Update test branch
+  test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@master
-      - uses: connor-baer/action-sync-branch@main
+      - name: Setup environment
+        uses: actions/checkout@v2
+
+      - name: Create update pull request
+        uses: LucasRuy/sync-branch-action@v1.1.1
         with:
-          branch: develop
-          token: ${{ secrets.GITHUB_TOKEN }}
-          force: false
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          SOURCE_BRANCH: 'main'
+          DESTINATION_BRANCH: 'develop'
