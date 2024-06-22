@@ -1,19 +1,24 @@
-name: Sync branch
-
+name: Sync
 on:
   push:
     branches:
       - main
 
 jobs:
-  sync-branch:
-    name: Update test branch
+  sync-branches:
     runs-on: ubuntu-latest
+    name: Syncing branches
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@master
-      - uses: connor-baer/action-sync-branch@main
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Node
+        uses: actions/setup-node@v1
         with:
-          branch: develop
-          token: ${{ secrets.GITHUB_TOKEN }}
-          force: false
+          node-version: 12
+      - name: Opening pull request
+        id: pull
+        uses: tretuna/sync-branches@1.4.0
+        with:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          FROM_BRANCH: "main"
+          TO_BRANCH: "develop"
