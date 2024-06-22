@@ -6,7 +6,7 @@ on:
 
 jobs:
   sync-branches:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     name: Syncing branches
     steps:
       - name: Checkout
@@ -15,9 +15,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12
-      - name: Sync Branches PR
-        uses: monoku/sync-branches-pr@0.0.1
+      - name: Opening pull request
+        id: pull
+        uses: duckdum/sync-branches-gh@v1.8.0
         with:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-          SOURCE_BRANCH: "main"
-          TARGET_BRANCH_STARTS_WITH: "develop"
+          FROM_BRANCH: "main"
+          TO_BRANCH: "develop"
