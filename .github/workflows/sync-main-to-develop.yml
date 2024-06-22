@@ -27,7 +27,7 @@ jobs:
         uses: remarkablemark/sync-branch@v1
         with:
           base: develop
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.ACTION_SECRET }}
 
 
           
