@@ -1,20 +1,32 @@
-name: Update Branch
-
+name: Sync
 on:
   push:
     branches:
+    # Change this to whatever branch you want this action to trigger on.
+    # Ideally it should match the "FROM_BRANCH" setting below.
       - main
 
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Setup environment
-        uses: actions/checkout@v2
+permissions:
+  # Needed to read branches
+  contents: read
+  # Needed to create PR's
+  pull-requests: write
 
-      - name: Create update pull request
-        uses: LucasRuy/sync-branch-action@v1.1.1
+jobs:
+  sync-branches:
+    runs-on: ubuntu-latest
+    name: Syncing branches
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
         with:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-          SOURCE_BRANCH: 'main'
-          DESTINATION_BRANCH: 'develop'
+          node-version: 20
+      - name: Opening pull request
+        id: pull
+        uses: jdtx0/branch-sync@1.5.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FROM_BRANCH: "main"
+          TO_BRANCH: "develop"
