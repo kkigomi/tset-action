@@ -2,7 +2,15 @@ name: Sync
 on:
   push:
     branches:
+    # Change this to whatever branch you want this action to trigger on.
+    # Ideally it should match the "FROM_BRANCH" setting below.
       - main
+
+permissions:
+  # Needed to read branches
+  contents: read
+  # Needed to create PR's
+  pull-requests: write
 
 jobs:
   sync-branches:
@@ -10,14 +18,15 @@ jobs:
     name: Syncing branches
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Set up Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
-          node-version: 12
-      - name: Create Sync PR
-        uses: sudoStatus200/create-sync-pr@0.3.1
+          node-version: 20
+      - name: Opening pull request
+        id: pull
+        uses: jdtx0/branch-sync@1.5.1
         with:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-          SOURCE_BRANCH: "main"
-          TARGET_BRANCH: "develop"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FROM_BRANCH: "main"
+          TO_BRANCH: "develop"
