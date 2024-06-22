@@ -1,18 +1,19 @@
-name: Sync develop
+name: Sync branch
+
 on:
   push:
     branches:
-      - 'main'
+      - main
+
 jobs:
   sync-branch:
+    name: Update test branch
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
-
-      - name: Merge main -> develop
-        uses: devmasx/merge-branch@master
+      - name: Checkout repository
+        uses: actions/checkout@master
+      - uses: connor-baer/action-sync-branch@main
         with:
-          type: now
-          from_branch: main
-          target_branch: develop
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: develop
+          token: ${{ secrets.GITHUB_TOKEN }}
+          force: false
